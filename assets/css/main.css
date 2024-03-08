@@ -2276,7 +2276,7 @@ input, select, textarea {
 		input[type="checkbox"]:focus + label:before,
 		input[type="radio"]:focus + label:before {
 			border-color: #3f3d53;
-			box-shadow: 0 0 0 1px #f2849e;
+			box-shadow: 0 0 0 1px #3f3d53;
 		}
 
 	input[type="checkbox"] + label:before {
