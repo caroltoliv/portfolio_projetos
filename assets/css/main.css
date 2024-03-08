@@ -2737,7 +2737,7 @@ input, select, textarea {
 			}
 
 				body:not(.is-touch) .tiles article:hover > .image:before {
-					background-color: #adadc7;
+					background-color: #333333;
 					opacity: 0.35;
 				}
 
@@ -3019,7 +3019,7 @@ input, select, textarea {
 
 				#menu > .inner > ul > li {
 					padding: 0;
-					border-top: solid 1px rgba(255, 255, 255, 0.10);
+					border-top: solid 1px rgba(255, 255, 255, 0.25);
 				}
 
 					#menu > .inner > ul > li a {
