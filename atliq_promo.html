@@ -124,20 +124,32 @@
 
 							.imagem-ampliavel:hover {
 								transform: scale(1.2);
+								cursor: pointer; /* Altera o cursor ao passar sobre a imagem */
+							}
+
+							.imagem-ampliavel:active {
+								transform: scale(2); /* Ao clicar, a imagem se expandirá para 200% do tamanho original */
+								position: fixed; /* A imagem ficará fixa na tela */
+								top: 0;
+								left: 0;
+								right: 0;
+								bottom: 0;
+								margin: auto; /* Centraliza a imagem na tela */
+								z-index: 9999; /* Garante que a imagem apareça acima de outros elementos */
 							}
 						</style>
 					</head>
 					<body>
 
 					<div style="display: flex; justify-content: center;">
-						<a href="https://imgur.com/3lLv59j.png" target="_blank"><img src="https://imgur.com/3lLv59j.png" alt="Slide 1" class="imagem-ampliavel" style="margin: 0 15px;"></a>
-						<a href="https://imgur.com/Ds3JLh1.png" target="_blank"><img src="https://imgur.com/Ds3JLh1.png" alt="Slide 2" class="imagem-ampliavel" style="margin: 0 15px;"></a>
-						<a href="https://imgur.com/4DPF9XV.png" target="_blank"><img src="https://imgur.com/4DPF9XV.png" alt="Slide 3" class="imagem-ampliavel" style="margin: 0 15px;"></a>
-						<a href="https://imgur.com/K1Zcxrh.png" target="_blank"><img src="https://imgur.com/K1Zcxrh.png" alt="Slide 4" class="imagem-ampliavel" style="margin: 0 15px;"></a>
+						<img src="https://imgur.com/3lLv59j.png" alt="Slide 1" class="imagem-ampliavel" style="margin: 0 15px;">
+						<img src="https://imgur.com/Ds3JLh1.png" alt="Slide 2" class="imagem-ampliavel" style="margin: 0 15px;">
+						<img src="https://imgur.com/4DPF9XV.png" alt="Slide 3" class="imagem-ampliavel" style="margin: 0 15px;">
+						<img src="https://imgur.com/K1Zcxrh.png" alt="Slide 4" class="imagem-ampliavel" style="margin: 0 15px;">
 					</div>
-
 					</body>
 					</html>
+
 
 
 				<p>Na <i>segunda estratégia</i>, os produtos tiveram suas estratégias de venda modificadas entre as campanhas, incluindo uma mudança no tipo de promoção e um aumento no preço dos produtos. No primeiro cenário, houve um aumento nas vendas na última campanha; no segundo, houve uma queda em comparação com a anterior.
