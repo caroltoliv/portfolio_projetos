@@ -111,6 +111,7 @@
 					<p>Ao examinar o desempenho das promoções quanto aos produtos, é possível categorizar os resultados em duas estratégias distintas: </p>
 					<p>Na <i> primeira estratégia </i>, encontram-se os produtos que foram promovidos da mesma maneira em ambas as campanhas, ou seja, utilizando o mesmo tipo de promoção. Nessa categoria, alguns produtos mostraram um sucesso consistente, com resultados ainda melhores na última campanha. Outros mantiveram um desempenho positivo, embora possam ter sido influenciados por outros fatores. Por outro lado, alguns produtos enfrentaram desafios, registrando um desempenho negativo em ambas as campanhas. </p>
 
+					<!DOCTYPE html>
 					<html lang="pt">
 					<head>
 						<meta charset="UTF-8">
@@ -126,27 +127,38 @@
 								transform: scale(1.2);
 								cursor: pointer; /* Altera o cursor ao passar sobre a imagem */
 							}
-
-							.imagem-ampliavel:active {
-								transform: scale(2); /* Ao clicar, a imagem se expandirá para 200% do tamanho original */
-								position: fixed; /* A imagem ficará fixa na tela */
-								top: 0;
-								left: 0;
-								right: 0;
-								bottom: 0;
-								margin: auto; /* Centraliza a imagem na tela */
-								z-index: 9999; /* Garante que a imagem apareça acima de outros elementos */
-							}
 						</style>
 					</head>
 					<body>
 
 					<div style="display: flex; justify-content: center;">
-						<img src="https://imgur.com/3lLv59j.png" alt="Slide 1" class="imagem-ampliavel" style="margin: 0 15px;">
-						<img src="https://imgur.com/Ds3JLh1.png" alt="Slide 2" class="imagem-ampliavel" style="margin: 0 15px;">
-						<img src="https://imgur.com/4DPF9XV.png" alt="Slide 3" class="imagem-ampliavel" style="margin: 0 15px;">
-						<img src="https://imgur.com/K1Zcxrh.png" alt="Slide 4" class="imagem-ampliavel" style="margin: 0 15px;">
+						<img src="https://imgur.com/3lLv59j.png" alt="Slide 1" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/3lLv59j.png')" style="margin: 0 15px;">
+						<img src="https://imgur.com/Ds3JLh1.png" alt="Slide 2" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/Ds3JLh1.png')" style="margin: 0 15px;">
+						<img src="https://imgur.com/4DPF9XV.png" alt="Slide 3" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/4DPF9XV.png')" style="margin: 0 15px;">
+						<img src="https://imgur.com/K1Zcxrh.png" alt="Slide 4" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/K1Zcxrh.png')" style="margin: 0 15px;">
 					</div>
+
+					<script>
+						function expandirImagem(src) {
+							var imgExpandida = document.createElement('img');
+							imgExpandida.src = src;
+							imgExpandida.style.width = '100%';
+							imgExpandida.style.height = '100%';
+							imgExpandida.style.position = 'fixed';
+							imgExpandida.style.top = '0';
+							imgExpandida.style.left = '0';
+							imgExpandida.style.zIndex = '9999';
+							imgExpandida.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+							imgExpandida.style.cursor = 'pointer'; // Para permitir fechar clicando na imagem
+
+							imgExpandida.onclick = function () {
+								document.body.removeChild(imgExpandida);
+							};
+
+							document.body.appendChild(imgExpandida);
+						}
+					</script>
+
 					</body>
 					</html>
 
