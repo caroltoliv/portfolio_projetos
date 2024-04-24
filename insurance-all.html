@@ -305,17 +305,69 @@
 						<p><b>Insight de negócio:</b> Analisar se o valor anual definido para veículos mais recentes está excessivamente alto, pois o cliente pode decidir que o risco de ficar sem seguro é menor do que o custo do prêmio.</p>
 
 						<img src="https://imgur.com/mCRaSKD.png" width="1200">
+						<br>
+						<br>
 
+						<h3>5.2. Qual a porcentagem de clientes interessados em seguro automóvel que a equipe de vendas conseguirá atingir com 20 mil ligações?</h3>
+
+						<p>Por lista ordenada (modelo), dos 381.109 clientes da Insurance All, cerca de 18% deles estão interessados pelo seguro automóvel. Logo, pode-se esperar que das 20.000 ligações, haverá 8.417 novos contratos, e uma receita estimada de ₹92.38M por ano.</p>
+
+						<p>Já por lista aleatória, dos 381.109 clientes da Insurance All,  aproximadamente 5% deles demonstram interesse pelo seguro automotivo. Consequentemente, é razoável esperar que, a partir de 20.000 ligações, sejam estabelecidos 2.451 contratos, resultando em uma receita estimada de ₹26.9M por ano.</p>
+
+						<p>O uso do modelo produzirá resultados 3.43 vezes melhores que a lista aleatória, representando um ganho adicional estimado de ₹65.48M para a empresa.</p>
+
+						<img src="https://imgur.com/q5Y4GUo.png" width="1200">
+
+						<br>
+						<br>
+
+						<h3>5.3. Se a capacidade da equipe de vendas for ampliada para 40 mil ligações, qual a porcentagem dos clientes interessados em adquirir um seguro automotivo a equipe será capaz de contatar?</h3>
+
+						<p>Por lista ordenada (modelo), dos 381.109 clientes da Insurance All, cerca de 34% deles estão interessados pelo seguro automóvel. Portanto, pode-se esperar que das 40.000 ligações, serão firmados 15.648 novos contratos, resultando em uma receita estimada de ₹171.75M por ano.</p>
+
+						<p>Por lista aleatória, dos 381.109 clientes da Insurance All, cerca de 10% demonstraram interesse pelo seguro automóvel. Logo, pode-se esperar que das 40.000 ligações, haverá 4.903 contratos, e uma receita estimada de ₹53.81M por ano.</p>
+
+						<p>O uso do modelo produzirá resultados 3.19 vezes melhores que a lista aleatória, representando um ganho adicional estimado de ₹117.93M para a empresa.</p>
+						
+						<img src="https://imgur.com/sx4x0H2.png" width="1200">
+
+						<br>
+						<br>
+						
+						<h3>5.4. Quantas ligações a equipe de vendas precisará realizar para alcançar 80% dos clientes interessados em adquirir um seguro automóvel?</h3>
+						
+						<p>A equipe de vendas precisará realizar 117.200 ligações, resultando na celebração de 37.382 novos contratos e uma receita estimada de ₹410.3M por ano.</p>
+
+						<p>O uso do modelo produzirá resultados 2.6 vezes melhores que a lista aleatória, representando um ganho adicional estimado de ₹252.64M para a empresa.</p>
+
+						<img src="https://imgur.com/SSZzI2X.png" width="1200">
+
+						<br>
+						<br>
+
+						<h2>6. Modelo em Produção e Acesso ao Algoritmo de Pontuação</h2>
+						<p>A plataforma Render foi utilizada para implementar o modelo de ML, que atenderá às solicitações via API. Isso possibilita que toda a equipe de vendas acesse a solução por meio de um botão na barra de ferramentas do Google Sheets que foi criado pelo Apps Script. Quando esse botão é acionado, uma pontuação é gerada para cada registro de cliente existente na planilha ou para novos registros. Essa pontuação representa a probabilidade de os clientes adquirirem o seguro automóvel. </p>
+
+
+						<h2>7. Aprendizados</h2>
+
+						<ul>
+							<li>Ainda que a pontuação seja pequena, o modelo contribui para aprimorar o processo de prospecção de clientes;</li>
+							<li>Para um conjunto de dados desbalanceado, deve-se compreender quais parâmetros têm o maior impacto na pontuação. Para alcançar isso, é necessário explorar diferentes combinações de parâmetros até encontrar a configuração ideal para o cenário específico;</li>
+							<li>É necessário testar técnicas diferentes de atributos na fase de preparação dos dados, uma vez que isso não apenas influencia o desempenho dos modelos, mas também o resultado final. Isso é particularmente relevante neste projeto, especialmente na elaboração do mecanismo que atribui pontuações aos registros. No entanto, é importante observar que técnicas de transformação que introduzem novas colunas podem entrar em conflito com a estrutura da planilha já existente no Google Sheets, o que pode tornar o processo de correção bastante oneroso.</li>
+						</ul>
+						
+						<h2>8. Próximos Passos</h2>
+
+						<ul>
+							<li>Para enriquecer o aprendizado dos modelos, buscar novos atributos. Esses atributos, ausentes no formulário de prospecção, têm o potencial de influenciar tanto o valor da apólice de seguro quanto a probabilidade de futuras contratações de seguros. Portanto, é de suma importância incorporá-los ao aprendizado do modelo e tê-los na análise exploratória, para consequentemente gerar novos insights para o negócio;</li>
+							<li>Otimizar a interface do Google Sheets com outras funcionalidades, visando a aprimorar a experiência do usuário.</li>
+						</ul>
 						
 
 						  
 
-						<ul>
-							<li>Adicionar mais variáveis;</li>
-							<li>Criar novas hipóteses e validá-las;</li>
-							<li>Analisar os erros acima de> R$ 10.000 e criar modelos específicos para as lojas mais difíceis (MAPE alto).</li>
-						</ul>
-					</ul>
+						
 				</section>
 			</div>
 		</div>
