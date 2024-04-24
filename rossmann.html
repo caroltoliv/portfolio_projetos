@@ -1,0 +1,389 @@
+<!DOCTYPE HTML>
+<!--
+	Phantom by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Projeto Rossmann</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="inner">
+
+							<!-- Logo -->
+								<!--  <a href="index.html" class="logo">
+									<span class="symbol"><img src="images/logo.svg" alt="" /></span><span class="title"> Previsão de Vendas</span>
+								-->
+								</a>
+
+							<!-- Nav -->
+								<nav>
+									<ul>
+										<li><a href="#menu">Menu</a></li>
+									</ul>
+								</nav>
+
+						</div>
+					</header>
+
+				<!-- Menu -->
+					<nav id="menu">
+						<h2>Menu</h2>
+						<ul>
+							<li><a href="index.html">Home</a></li>
+							<!-- <li><a href="generic.html">Ipsum veroeros</a></li>
+							<li><a href="generic.html">Tempus etiam</a></li>
+							<li><a href="generic.html">Consequat dolor</a></li>
+							<li><a href="elements.html">Elements</a></li>
+						</ul> -->
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+							<h1> Previsão de Vendas de uma Rede de Farmácias</h1>
+							<!--<span class="image main"><img src="images/pic13.jpg" alt="" /></span>-->
+							<h2>1. Problema de Negócios</h2>
+							<p>Fundada em 1972, Dirk Rossmann GmbH é uma das maiores redes de drogarias da Europa, com lojas na Alemanha, Polônia, Hungria, República Tcheca, Turquia, Albânia, Kosovo, Israel e Espanha. Ainda que o foco das drogarias sejam ofertar produtos nas áreas de saúde e beleza, a Rossmann investe em produtos e serviços que fogem desse universo, como ração para animais e serviço fotográfico.
+							<p>De acordo com o seu site, a variedade das filiais é norteada pelas necessidades do clientes e a gama de produtos depende do tamanho da loja e localização. A empresa possui atualmente (2023), 60.500 funcionários e 4.514 filiais.</p>
+							<p>Com o intuito de reformar as lojas, o CFO (Diretor Financeiro) da empresa Rossmann, numa reunião com todos os gerentes de loja, solicitou a cada um deles uma previsão diária de vendas, das próximas 6 semanas. Para um melhor resultado, essa demanda foi repassada para o time de Data Science. </p>
+							
+							<h3>1.1. Sobre os dados</h3>
+							<p> Os dados foram obtidos no <a href="https://www.kaggle.com/c/rossmann-store-sales/data">Kaggle</a> e contém informações sobre as vendas diárias de 1.115 lojas da Rossmann. O conjunto de dados contém informações sobre promoções, feriados e características da loja.
+								
+							<h2>2. Planejamento da Solução</h2>
+
+							<h3>2.1. Resumo</h3>
+							
+							<ul>
+								<li>O objetivo do projeto é fornecer previsões de vendas de 6 semanas, para várias lojas com base em dados históricos; </li>
+								<li>Os potenciais métodos a serem utilizados são as séries temporais e regressão com algumas modificações; </li>
+								<li>O formato de entrega será um Telegram Bot: ao digitar o ID da loja, o valor total de vendas será apresentado. </li>
+
+							</ul>
+							
+							<h3>2.2. Metodologia </h3>
+
+							<p> Neste projeto, a metodologia CRISP-DM foi implementada para entregar valor ao negócio. Em síntese, a estrutura do projeto Rossmann Sales Forecast foi a seguinte: </p>
+							
+							<h4>2.2.1 Entendimento do Negócio + Premissas + Limpeza de Dados:</h4>
+							
+							<ul>
+							<li><p>Os registros de vendas se iniciam em 1º de janeiro de 2013 e terminam em 31 de julho de 2015; </li></p>
+							<li><p>Valores faltantes na variável `competition_distance` foram interpretados como ausência de competidores próximos ou lojas significativamente distantes que por isso, não são consideradas concorrentes. Logo, os valores NA foram alterados para 200.000 metros;</li></p>
+							<li><p>Valores faltantes nas variáveis `competition_open_since_month` e `competition_open_since_year` podem decorrer da falta de competidores próximos ou do desconhecimento da data de abertura da loja concorrente. Dado isso, foi considerado o mês e ano do registro de vendas `date`;</li></p>
+							<li><p>Valores faltantes nas variáveis na `promo_month_week` e `promo_month_year` também foram substituídos pela data do registro de vendas `date`;
+							</li></p>
+						 	</ul>
+
+							 <p>Após análise de dados, o conjunto final das variáveis ficou assim:</p>
+							 <ul>
+								<li><b>store</b>: ID único para cada loja</li>
+								<li><b>day_of_week</b>: dia da semana (1 = Segunda, 7 = Domingo)</li>
+								<li><b>date</b>: data do registro de vendas</li>
+								<li><b>sales</b>: volume de vendas realizadas no dia do registro</li>
+								<li><b>customers</b>: número de clientes que frequentaram a loja no dia do registro</li>
+								<li><b>open</b>: indica se a loja estava aberta (0 = fechado, 1 = aberto)</li>
+								<li><b>promo_week</b>: indica se no registro de venda, a loja estava realizando uma promoção semanal</li>
+								<li><b>state_holiday</b>: indica se a venda foi realizada num feriado estadual (a = feriado, b = feriado da Páscoa, c = Natal, 0 = nenhum)</li>
+								<li><b>school_holiday</b>: indica se a venda no dia foi afetada pelo fechamento das escolas públicas</li>
+								<li><b>store_type</b>: indica os 4 tipos de lojas que a a Rossmann possui (a, b, c, d)</li>
+								<li><b>assortment</b>: descreve qual nível de sortimento de produtos a loja pertence (a = básico, b = extra, c = estendido)</li>
+								<li><b>competition_distance</b>: distância em metros até a loja concorrente mais próxima</li>
+								<li><b>competition_open_since_month</b>: indica o mês aproximado em que o concorrente mais próximo foi aberto</li>
+								<li><b>competition_open_since_year</b>: indica o ano aproximado em que o concorrente mais próximo foi aberto</li>
+								<li><b>promo_month</b>: indica se a loja participa de promoções mensais (0 = não participa, 1 = participa)</li>
+								<li><b>promo_month_since_week</b>: descreve a semana em que a loja começou a participar das promoções mensais</li>
+								<li><b>promo_month_since_year</b>: descreve o ano em que a loja começou a participar das promoções mensais</li>
+								<li><b>promo_interval</b>: descreve os intervalos consecutivos em que promo_month é iniciado (as promoções mensais são realizadas 4 vezes no ano)</li>
+								<li><b>promo_month_active</b>: indica se no dia do registro de venda, a loja estava participando das promoções do mês (0 = não estava, 1 = estava)</li>
+								<li><b>year</b>: ano extraído da coluna data</li>
+								<li><b>month</b>: mês extraído da coluna data</li>
+								<li><b>day</b>: dia extraído da coluna data</li>
+								<li><b>week_of_year</b>: semana do ano extraído da coluna data</li>
+								<li><b>competition_since</b>: ano e mês extraído da coluna competition_open_since_year e competition_open_since_month</li>
+								<li><b>competition_time_month</b>: indica há quantos meses a loja competidora existe</li>
+								<li><b>promo_month_since_date</b>: ano e semana que começaram as promoções mensais</li>
+								<li><b>promo_month_time_week</b>: quantidade de semanas que a loja participa das promoções mensais</li>
+							  </ul>
+
+							  <h4>2.2.2 Hipóteses + Exploração dos Dados </h4>
+
+							  Visando organizar as ideias e listar características que podem ter impactado o faturamento de vendas das lojas Rossmann, o Mapa Mental de Hipóteses foi desenhado, e com o auxílio dele, 9 hipóteses foram criadas e testadas ao longo da fase de EDA.
+
+							  <img src="https://imgur.com/q8Ot9z7.png" width="1200">
+							  
+							  <p>Após passar pelas análises (univariada, bivariada e multivariada), os principais insights obtidos através dos dados foram:</p>
+							  
+							  <b>H4. Lojas que participam das duas promoções deveriam vender mais</b>
+							  
+							  <b>Hipótese Falsa:</b> Lojas que participam das duas promoções (semanal e mensal) vendem menos (e têm menor tempo de duração). Os registros de vendas mostram que as lojas vendem mais, em dias regulares e dias com promoção semanal. Há um certa complexidade quanto a essa variável, pois, existem características que podem impactar as vendas: o tipo de loja e o seu nível de sortimento, as necessidades dos clientes que podem não estar sendo atingidas, etc..
+							  <br> 
+							  <img src="https://imgur.com/FqWz9TO.png" width="1200">
+							  
+							  <br>
+
+							  <b>H6. Lojas deveriam vender mais ao longo dos anos</b>
+							  
+							  <b>Hipótese Falsa: </b> Lojas vendem menos ao longo dos anos. Analisando os dois anos completos (2013 e 2014) há uma queda nas vendas. Mas, pra não isolar o ano de 2015 (os registros de vendas vão até julho) foi analisado o comportamento (a proṕosito, crescente) do primeiro semestre dos três anos.
+							  <br> 
+							  <img src="https://imgur.com/85tUf3J.png" width="1200">
+						 
+						<h2>3. </h2>
+						<ul>
+							<li><p>Verificar o documento "Recommended Insights.pdf" para revisar algumas recomendações do gerente.</li></p>
+							<li><p>Elaborar um relatório que englobe análises e respostas às questões comerciais críticas delineadas pelos executivos seniores, conforme descrito no documento "ad-hoc-requests.pdf".</li></p>
+							<li><p>Apresentar a análise para o diretor de vendas.</li></p>
+							<li><p>Criar e disponibilizar Painel Power BI para os stakeholders.</li></p>
+						</ul>	
+
+						<h3>3.1. Análise Comparativa</h3>
+
+						<h4>3.1.1. Tipos de Promoção</h4>
+						
+						<p>A Promoção BOGOF demonstrou um aumento significativo nas vendas e receitas incrementais, destacando sua eficácia em atrair clientes. Por outro lado, a promoção de 25% OFF resultou em redução nas vendas e receitas incrementais, enquanto a de 50% OFF teve um impacto ainda menor que a de 33% OFF. A promoção 'Ganhe 500 de Cashback' parece ser a mais eficaz em aumentar vendas e receitas incrementais.</p>
+						
+						<h4>3.1.2. Categorias</h4>
+						<p>Analisando as categorias e suas campanhas, destacamos o seguinte:</p>
+						<ul>
+						<p><li>Mercearia e alimentos básicos (Grocery and Staples): Na semana anterior à semana promocional, observou-se um aumento significativo tanto na quantidade vendida quanto na receita gerada, especialmente durante a festividade Sankranti. Os produtos pertencentes a esta categoria incluem lentilha, arroz, farinha de trigo e óleo de girassol.</li>
+						<p><li>Eletrodomésticos (Home Appliances): Durante a festividade Sankranti, observou-se um aumento, embora menos expressivo, quando comparado a festividade Diwali, tanto na quantidade vendida quanto na receita gerada, com produtos como lâmpadas e aquecedores.</li>
+						<p><li>Cuidados Domiciliares (Home Care): Na semana Sankranti, a quantidade vendida aumentou, porém a receita teve uma leve variação, com produtos como lençóis, cortinas, recipientes e esponjas de louça.</li>
+						<p><li>Cuidado Pessoal (Personal Care): Na última campanha, esta categoria apresentou o menor desempenho em ambas as métricas, com produtos como hidratantes e sabonetes.</li>
+						</ul>
+
+					<h4>3.1.3. Produtos</h4>
+					<p>Ao examinar o desempenho das promoções quanto aos produtos, é possível categorizar os resultados em duas estratégias distintas: </p>
+					<p>Na <i> primeira estratégia </i>, encontram-se os produtos que foram promovidos da mesma maneira em ambas as campanhas, ou seja, utilizando o mesmo tipo de promoção. Nessa categoria, alguns produtos mostraram um sucesso consistente, com resultados ainda melhores na última campanha. Outros mantiveram um desempenho positivo, embora possam ter sido influenciados por outros fatores. Por outro lado, alguns produtos enfrentaram desafios, registrando um desempenho negativo em ambas as campanhas. </p>
+
+					<html lang="pt">
+					<head>
+						<meta charset="UTF-8">
+						<meta name="viewport" content="width=device-width, initial-scale=1.0">
+						<title>Imagens Ampliáveis</title>
+						<style>
+							.imagem-ampliavel {
+								width: 200px;
+								transition: transform 0.2s;
+							}
+
+							.imagem-ampliavel:hover {
+								transform: scale(1.2);
+								cursor: pointer; 
+							}
+						</style>
+					</head>
+					<body>
+
+					<div style="display: flex; justify-content: center;">
+						<img src="https://imgur.com/3lLv59j.png" alt="Slide 1" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/3lLv59j.png')" style="margin: 0 15px;">
+						<img src="https://imgur.com/Ds3JLh1.png" alt="Slide 2" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/Ds3JLh1.png')" style="margin: 0 15px;">
+						<img src="https://imgur.com/4DPF9XV.png" alt="Slide 3" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/4DPF9XV.png')" style="margin: 0 15px;">
+						<img src="https://imgur.com/K1Zcxrh.png" alt="Slide 4" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/K1Zcxrh.png')" style="margin: 0 15px;">
+					</div>
+
+					<script>
+						function expandirImagem(src) {
+							var imgExpandida = document.createElement('img');
+							imgExpandida.src = src;
+							imgExpandida.style.width = '100%';
+							imgExpandida.style.height = '100%';
+							imgExpandida.style.position = 'fixed';
+							imgExpandida.style.top = '0';
+							imgExpandida.style.left = '0';
+							imgExpandida.style.zIndex = '9999';
+							imgExpandida.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+							imgExpandida.style.cursor = 'pointer'; // Para permitir fechar clicando na imagem
+
+							imgExpandida.onclick = function () {
+								document.body.removeChild(imgExpandida);
+							};
+
+							document.body.appendChild(imgExpandida);
+						}
+					</script>
+
+					</body>
+					</html>
+					<br>
+
+					<p>Na <i>segunda estratégia</i>, os produtos tiveram suas estratégias de venda modificadas entre as campanhas, incluindo uma mudança no tipo de promoção e um aumento no preço dos produtos. No primeiro cenário, houve um aumento nas vendas na última campanha; no segundo, houve uma queda em comparação com a anterior.
+				
+						<html lang="pt">
+						<head>
+							<meta charset="UTF-8">
+							<meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<title>Imagens Ampliáveis</title>
+							<style>
+								.imagem-ampliavel {
+									width: 200px;
+									transition: transform 0.2s;
+								}
+
+								.imagem-ampliavel:hover {
+									transform: scale(1.2);
+									cursor: pointer; 
+								}
+							</style>
+						</head>
+						<body>
+
+						<div style="display: flex; justify-content: center;">
+							<img src="https://imgur.com/qxPz8Og.png" alt="Slide 1" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/qxPz8Og.png')" style="margin: 0 15px;">
+							<img src="https://imgur.com/EQid7Uh.png" alt="Slide 2" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/EQid7Uh.png')" style="margin: 0 15px;">
+							</div>
+
+						<script>
+							function expandirImagem(src) {
+								var imgExpandida = document.createElement('img');
+								imgExpandida.src = src;
+								imgExpandida.style.width = '100%';
+								imgExpandida.style.height = '100%';
+								imgExpandida.style.position = 'fixed';
+								imgExpandida.style.top = '0';
+								imgExpandida.style.left = '0';
+								imgExpandida.style.zIndex = '9999';
+								imgExpandida.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+								imgExpandida.style.cursor = 'pointer'; // Para permitir fechar clicando na imagem
+
+								imgExpandida.onclick = function () {
+									document.body.removeChild(imgExpandida);
+								};
+
+								document.body.appendChild(imgExpandida);
+							}
+						</script>
+
+						</body>
+						</html>
+						<br>
+
+						<h4>3.1.4. Cidades</h4>
+						
+						<p>Sabe-se que quanto às festividades, Diwali é amplamente celebrado em toda a Índia, sem restrições geográficas, enquanto Sankranti tem sua influência mais concentrada nos estados do sul da Índia.  No total, há registros de vendas em 10 cidades indianas. Abaixo, destacam-se as top 3:</p>
+
+						<ul>
+							<li>
+							Em <b>Bangalore (Bengaluru),</b>, a capital de Karnataka, localizada no sul do estado, os resultados foram notáveis durante as análises das campanhas:
+								<ul>
+									<li> Durante a campanha Diwali, registrou-se um incremento de 70% nas quantidades vendidas, resultando em uma receita de 23,8 milhões.</li>
+									<li>Na campanha Sankranti, houve um aumento de 164% nas quantidades vendidas, alcançando uma receita de 12,1 milhões.</li>
+								</ul>
+							</li>
+						</ul>
+
+						<ul>
+							<li>
+							Em <b>Chennai</b>, a capital e a maior cidade do estado de Tamil Nadu, encontra-se na costa leste do sul, foi a segunda cidade com melhores resultados:
+								<ul>
+									<li>Durante a campanha Diwali, registrou-se um incremento de 66% nas quantidades vendidas, resultando em uma receita de 18,8 milhões.</li>
+									<li>Na campanha Sankranti, houve um aumento de 162% nas quantidades vendidas, alcançando uma receita de 9,8 milhões.</li>
+								</ul>
+							</li>
+						</ul>
+
+						<ul>
+							<li>
+							Em <b>Hyderabad</b>, a capital do estado de Telangana, situada na região central-sul, foi com a terceira com melhores resultados:
+								<ul>
+									<li>Durante a campanha Diwali, registrou-se um incremento de 63% nas quantidades vendidas, resultando em uma receita de 14,3 milhões.</li>
+									<li>Na campanha Sankranti, houve um aumento de 146% nas quantidades vendidas, alcançando uma receita de 7,3 milhões.</li>
+								</ul>
+							</li>
+						</ul>
+						
+						<style>
+							img {
+								display: block;
+								margin: 0 auto;
+							}
+						</style>
+
+						<img src="https://imgur.com/gDw4kc8.png" width="60%"/>
+				
+						<br>
+					
+						<h4>3.1.5. Lojas</h4>
+						
+						<p>Um total de 50 lojas participaram das promoções. Abaixo estão listadas, em ordem decrescente, as três principais lojas com os melhores resultados:</p>
+						
+						<ul>
+						<li><p>Durante a campanha do Diwali, a <b>loja STMYS-1</b>, localizada na cidade de Mysuru, registrou um incremento de 93% nas quantidades vendidas, resultando em uma receita de 3 milhões. Na campanha do Sankranti, houve um aumento significativo de 187% nas quantidades vendidas, alcançando uma receita de 1,6 milhões.
+
+						<li><p>Durante a campanha do Diwali, a <b>loja STCHE-4</b>, situada em Chennai, observou um aumento de 82% nas quantidades vendidas, gerando uma receita de 3,1 milhões. Na campanha do Sankranti, as quantidades vendidas aumentaram em 179%, resultando em uma receita de 1,4 milhões.
+
+						<li><p>Durante a campanha do Diwali, a <b>loja STBLR-0</b>, localizada em Bengaluru, viu um aumento de 79% nas quantidades vendidas, o que gerou uma receita de 3 milhões. Na campanha do Sankranti, as quantidades vendidas aumentaram significativamente em 192%, resultando em uma receita de 1,4 milhões.
+						</ul>
+
+
+					<h2>4.0 O Produto Final do Projeto</h2>
+
+					<p>Painel no Power BI com métricas e análises claras e autoexplicativas, facilitando a compreensão dos usuários.</p>
+
+					<h2>5.0. Conclusão</h2>
+					
+					<ul>
+						<li>
+						Quando substituir a oferta promocional de uma campanha por outra, priorizar a troca pela promoção BOGOF.
+						</li>
+					</ul>
+					<ul>
+						<li>
+							A promoção de 25% OFF teve pouco efeito em motivar os clientes a comprar produtos.
+						</li>
+					</ul>
+					<ul>
+						<li>
+							Explorar a criação de novos combos que incorporem a promoção 500 Cashback.
+						</li>
+					</ul>
+					<ul>
+						<li>
+							Os motivos por trás da seleção dos produtos em promoção não estão explícitos, no entanto, é crucial compreender historicamente quais itens apresentam uma alta demanda durante festividades. Contudo, parece que os produtos oferecidos estão alinhados com o espírito das duas celebrações. 
+							<ul>
+							<li>Vale ressaltar a mudança na promoção da farinha de trigo e do óleo de girassol, que passaram de um desconto de 25% para uma oferta de "leve dois, pague um" (BOGOF), juntamente com um aumento de preço entre uma campanha e outra. Como já mencionado, durante o festival Sankranti, a demanda por esses produtos pode ser significativa. Assim, essa mudança de estratégia parece ter sido acertada, resultando em ganhos consideráveis.
+							</li>
+								</ul>
+						</li>
+					</ul>
+				</section>
+			</div>
+		</div>
+					
+				<!-- Footer -->
+				<footer id="footer">
+					<div class="inner">
+						<section>
+							<h2>Follow</h2>
+							<ul class="icons">
+								<li><a href="https://github.com/oliveiract/" class="icon brands style2 fa-github"><span class="label">GitHub</span></a></li>
+								<li><a href="https://www.linkedin.com/in/oliveiract/" class="icon brands style2 fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							</ul>
+						</section>
+						<ul class="copyright">
+							<li>&copy; Untitled. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						</ul>
+					</div>
+				</footer>
+
+		</div>
+
+	<!-- Scripts -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+
+</body>
+</html>
