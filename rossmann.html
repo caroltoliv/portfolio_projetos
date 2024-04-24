@@ -146,10 +146,12 @@
 							  <h4>2.2.3 Pré-processamento de dados e Seleção de Recursos </h4>
 
 							  <p>Chegou a etapa de preparação dos dados para que posteriormente ocorra a aplicação de algoritmos de aprendizagem de máquina. Como o aprendizado da maioria dos algoritmos de ML é facilitado com dados numéricos, técnicas foram necessárias:</p>
-							  <p><b>de rescaling:</b> Robust Scaler para as variáveis `competition_distance` e `competition_time_month` e Min-Max Scaler para `year` e `promo_month_time_week`;</p>
-							  <p><b>de transformação - enconding:</b> para variável `state_holiday`, foi utilizado One Hot Enconding; para a variável `store_type`, a Label Enconding; e para a variável `assortment`, a Ordinal Enconding;</p>
-							  <p><b>de transformação - grandeza:</b> na variável resposta `sales` foi usado o log1p, visando uma distribuição mais próxima do normal;</p>
-							  <p><b>de transformação - natureza:</b> nas variáveis temporais, o modelo de natureza cíclica foi utilizado, com o círculo trigonomêtrico (seno e coseno).</p>
+							  <ul>
+								<li><b>de rescaling:</b> Robust Scaler para as variáveis `competition_distance` e `competition_time_month` e Min-Max Scaler para `year` e `promo_month_time_week`;</li>
+								<li><b>de transformação - enconding:</b> para variável `state_holiday`, foi utilizado One Hot Enconding; para a variável `store_type`, a Label Enconding; e para a variável `assortment`, a Ordinal Enconding;</li>
+								<li><b>de transformação - grandeza:</b> na variável resposta `sales` foi usado o log1p, visando uma distribuição mais próxima do normal;</li>
+								<li><b>de transformação - natureza:</b> nas variáveis temporais, o modelo de natureza cíclica foi utilizado, com o círculo trigonomêtrico (seno e coseno).</li>
+							  </ul>
 
 							  <p>Com o Boruta, foi descoberto quais são as variáveis mais relevantes para usarmos no modelo preditivo de ML.
 							  
