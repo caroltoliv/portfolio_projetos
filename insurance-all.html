@@ -59,223 +59,250 @@
 							<p>Agora, o desafio consiste em identificar os potenciais clientes que receberão a oferta do seguro automotivo e efetuar o plano de vendas no decorrer de dois meses, mantendo-se dentro da restrição orçamentária estabelecida. </p>
 							
 							<h3>1.1. Sobre os dados</h3>
-							<p> Os dados foram obtidos no <a href="https://www.kaggle.com/c/rossmann-store-sales/data">Kaggle</a> e contém informações sobre as vendas diárias de 1.115 lojas da Rossmann. O conjunto de dados contém informações sobre promoções, feriados e características da loja.
+							<p> Os dados do projeto foram obtidos através do <a href="https://www.kaggle.com/datasets/anmolkumar/health-insurance-cross-sell-prediction">Kaggle</a>:  Health Insurance Cross Sell Prediction. O conjunto de dados inclui as seguintes informações:</p>
+
+							<table>
+								<tr>
+								  <th>Variável</th>
+								  <th>Definição</th>
+								</tr>
+								<tr>
+								  <td>id</td>
+								  <td>ID exclusivo do cliente</td>
+								</tr>
+								<tr>
+								  <td>gender</td>
+								  <td>Gênero do cliente</td>
+								</tr>
+								<tr>
+								  <td>age</td>
+								  <td>Idade do cliente</td>
+								</tr>
+								<tr>
+								  <td>driving_license</td>
+								  <td>0 : O cliente não tem Carteira de Habilitação, 1 : O cliente possui Carteira de Habilitação</td>
+								</tr>
+								<tr>
+								  <td>region_code</td>
+								  <td>Código exclusivo para a região do cliente</td>
+								</tr>
+								<tr>
+								  <td>previously_insured</td>
+								  <td>1 : Cliente já possui seguro automóvel, 0 : Cliente não possui seguro automóvel</td>
+								</tr>
+								<tr>
+								  <td>vehicle_age</td>
+								  <td>Idade do Veículo</td>
+								</tr>
+								<tr>
+								  <td>vehicle_damage</td>
+								  <td>1 : O veículo do cliente sofreu danos anteriormente, 0 : O veículo do cliente não sofreu danos anteriormente</td>
+								</tr>
+								<tr>
+								  <td>annual_premium</td>
+								  <td>O valor que o cliente paga como prêmio no ano, quanto ao seguro saúde</td>
+								</tr>
+								<tr>
+								  <td>policy_sales_channel</td>
+								  <td>Código anonimizado para o canal de divulgação ao cliente (por correio, por telefone, pessoalmente, etc.)</td>
+								</tr>
+								<tr>
+								  <td>days_associated</td>
+								  <td>Número de dias desde que o cliente se tornou associado à empresa por meio da aquisição do seguro de saúde</td>
+								</tr>
+								<tr>
+								  <td>response</td>
+								  <td>1 : O cliente está interessado, 0 : O cliente não está interessado</td>
+								</tr>
+							  </table>
 								
-							<h2>2. Planejamento da Solução</h2>
+							<h2>2. Premissas de Negócios </h2>
 
-							<h3>2.1. Resumo</h3>
-							
 							<ul>
-								<li>O objetivo do projeto é fornecer previsões de vendas de 6 semanas, para várias lojas com base em dados históricos; </li>
-								<li>Os potenciais métodos a serem utilizados são as séries temporais e regressão com algumas modificações; </li>
-								<li>O formato de entrega será um Telegram Bot: ao digitar o ID da loja, o valor total de vendas será apresentado. </li>
-
+								<li>A empresa entrará em contato com seus clientes por meio de ligações telefônicas;</li>
+								<li>A empresa possui recursos limitados e ligações telefônicas limitadas;</li>
+								<li>A equipe de vendas já utiliza o Google Sheets como uma ferramenta corporativa e a pontuação da propensão para adquirir seguro automotivo deve ser integrada a essa plataforma;</li>
 							</ul>
 							
-							<h3>2.2. Metodologia </h3>
-
-							<p> Neste projeto, a metodologia CRISP-DM foi implementada para entregar valor ao negócio. Em síntese, a estrutura do projeto Rossmann Sales Forecast foi a seguinte: </p>
-							
-							<h4>2.2.1 Entendimento do Negócio + Premissas + Limpeza de Dados:</h4>
-							
+							<p>Os cenários de faturamento serão calculados, levando em conta as premissas abaixo:</p>
 							<ul>
-							<li><p>Os registros de vendas se iniciam em 1º de janeiro de 2013 e terminam em 31 de julho de 2015; </li></p>
-							<li><p>Valores faltantes na variável `competition_distance` foram interpretados como ausência de competidores próximos ou lojas significativamente distantes que por isso, não são consideradas concorrentes. Logo, os valores NA foram alterados para 200.000 metros;</li></p>
-							<li><p>Valores faltantes nas variáveis `competition_open_since_month` e `competition_open_since_year` podem decorrer da falta de competidores próximos ou do desconhecimento da data de abertura da loja concorrente. Dado isso, foi considerado o mês e ano do registro de vendas `date`;</li></p>
-							<li><p>Valores faltantes nas variáveis na `promo_month_week` e `promo_month_year` também foram substituídos pela data do registro de vendas `date`;
-							</li></p>
-						 	</ul>
+								<li>Todos os clientes interessados irão adquirir o seguro automóvel;</li>
+								<li>O custo médio de abordar um contato na lista para fins de prospecção, incluindo o tempo do funcionário e os gastos com comunicação, é de 1250 rúpias indianas;</li>
+								<li>O ticket médio para um seguro saúde anual da Insurance All é: ₹30564.39. O ticket médio do seguro automóvel anual corresponde a 40% do ticket médio do seguro saúde, ou seja, 12225.76 rúpias indianas.</li>
+							</ul>							
 
-							 <p>Após análise de dados, o conjunto final das variáveis ficou assim:</p>
-							 <ul>
-								<li><b>store</b>: ID único para cada loja</li>
-								<li><b>day_of_week</b>: dia da semana (1 = Segunda, 7 = Domingo)</li>
-								<li><b>date</b>: data do registro de vendas</li>
-								<li><b>sales</b>: volume de vendas realizadas no dia do registro</li>
-								<li><b>customers</b>: número de clientes que frequentaram a loja no dia do registro</li>
-								<li><b>open</b>: indica se a loja estava aberta (0 = fechado, 1 = aberto)</li>
-								<li><b>promo_week</b>: indica se no registro de venda, a loja estava realizando uma promoção semanal</li>
-								<li><b>state_holiday</b>: indica se a venda foi realizada num feriado estadual (a = feriado, b = feriado da Páscoa, c = Natal, 0 = nenhum)</li>
-								<li><b>school_holiday</b>: indica se a venda no dia foi afetada pelo fechamento das escolas públicas</li>
-								<li><b>store_type</b>: indica os 4 tipos de lojas que a a Rossmann possui (a, b, c, d)</li>
-								<li><b>assortment</b>: descreve qual nível de sortimento de produtos a loja pertence (a = básico, b = extra, c = estendido)</li>
-								<li><b>competition_distance</b>: distância em metros até a loja concorrente mais próxima</li>
-								<li><b>competition_open_since_month</b>: indica o mês aproximado em que o concorrente mais próximo foi aberto</li>
-								<li><b>competition_open_since_year</b>: indica o ano aproximado em que o concorrente mais próximo foi aberto</li>
-								<li><b>promo_month</b>: indica se a loja participa de promoções mensais (0 = não participa, 1 = participa)</li>
-								<li><b>promo_month_since_week</b>: descreve a semana em que a loja começou a participar das promoções mensais</li>
-								<li><b>promo_month_since_year</b>: descreve o ano em que a loja começou a participar das promoções mensais</li>
-								<li><b>promo_interval</b>: descreve os intervalos consecutivos em que promo_month é iniciado (as promoções mensais são realizadas 4 vezes no ano)</li>
-								<li><b>promo_month_active</b>: indica se no dia do registro de venda, a loja estava participando das promoções do mês (0 = não estava, 1 = estava)</li>
-								<li><b>year</b>: ano extraído da coluna data</li>
-								<li><b>month</b>: mês extraído da coluna data</li>
-								<li><b>day</b>: dia extraído da coluna data</li>
-								<li><b>week_of_year</b>: semana do ano extraído da coluna data</li>
-								<li><b>competition_since</b>: ano e mês extraído da coluna competition_open_since_year e competition_open_since_month</li>
-								<li><b>competition_time_month</b>: indica há quantos meses a loja competidora existe</li>
-								<li><b>promo_month_since_date</b>: ano e semana que começaram as promoções mensais</li>
-								<li><b>promo_month_time_week</b>: quantidade de semanas que a loja participa das promoções mensais</li>
-							  </ul>
+							<h2>3. Planejamento da Solução</h2>
 
-							  <h4>2.2.2 Hipóteses + Exploração dos Dados </h4>
+							<h3>3.1. Produto Final</h3>
 
-							  Visando organizar as ideias e listar características que podem ter impactado o faturamento de vendas das lojas Rossmann, o Mapa Mental de Hipóteses foi desenhado, e com o auxílio dele, 9 hipóteses foram criadas e testadas ao longo da fase de EDA.
+							<ul>
+								<li>
+								Utilizar a plataforma Render para hospedar o modelo de Machine Learning, o qual será acessado por meio de uma API para responder às requisições;
+								</li>
+							</ul>
+							<ul>
+								<li>
+								Integrar a solução de forma que se conecte ao Google Sheets;
+								</li>
+							</ul>
+							<ul>
+								<li>
+								Por meio de um botão na barra de ferramentas, atribuir uma pontuação para os clientes existentes (ou qualquer novo cliente adicionado à planilha) com base em sua probabilidade de adquirir o seguro automóvel;
+								</li>
+							</ul>
+							<ul>
+								<li>
+									Fornecer um relatório que inclui análises e respostas para as seguintes questões: 
+									<ul>
+										<li>Qual a porcentagem de clientes interessados em seguro automóvel que a equipe de vendas conseguirá atingir com 20 mil ligações?</li>
+										<li>Se a capacidade da equipe de vendas for ampliada para 40 mil ligações, qual a porcentagem dos clientes interessados em adquirir um seguro automotivo a equipe será capaz de contatar?</li>
+										<li>Quantas ligações a equipe de vendas precisará realizar para alcançar 80% dos clientes interessados em adquirir um seguro automóvel?</li>
+										</ul>
+								</li>
+							</ul>
 
-							  <img src="https://imgur.com/q8Ot9z7.png" width="1200">
-							  
-							  <p>Após passar pelas análises (univariada, bivariada e multivariada), os principais insights obtidos através dos dados foram:</p>
-							  
-							  <b><p>H4. Lojas que participam das duas promoções deveriam vender mais</b></p>
-							  
-							  <b>Hipótese Falsa:</b> Lojas que participam das duas promoções (semanal e mensal) vendem menos (e têm menor tempo de duração). Os registros de vendas mostram que as lojas vendem mais, em dias regulares e dias com promoção semanal. Há um certa complexidade quanto a essa variável, pois, existem características que podem impactar as vendas: o tipo de loja e o seu nível de sortimento, as necessidades dos clientes que podem não estar sendo atingidas, etc..
-							  <br> 
-							  <img src="https://imgur.com/FqWz9TO.png" width="1200">
-							  
-							  <br>
-							  <br>
+							<h3>3.2. Processo</h3>
+							<p>A abordagem escolhida para resolver o desafio se fundamenta na metodologia CRISP-DM:</p>
 
-							  <b><p>H6. Lojas deveriam vender mais ao longo dos anos</b></p>
-							  
-							  <b>Hipótese Falsa: </b> Lojas vendem menos ao longo dos anos. Analisando os dois anos completos (2013 e 2014) há uma queda nas vendas. Mas, pra não isolar o ano de 2015 (os registros de vendas vão até julho) foi analisado o comportamento (a proṕosito, crescente) do primeiro semestre dos três anos.
-							  <br> 
-							  <img src="https://imgur.com/85tUf3J.png" width="1200">
-							  
-							  <br>
-							  <br>
 
-							  <h4>2.2.3 Pré-processamento de dados e Seleção de Recursos </h4>
-
-							  <p>Chegou a etapa de preparação dos dados para que posteriormente ocorra a aplicação de algoritmos de aprendizagem de máquina. Como o aprendizado da maioria dos algoritmos de ML é facilitado com dados numéricos, técnicas foram necessárias:</p>
-							  <ul>
-								<li><b>de rescaling:</b> Robust Scaler para as variáveis `competition_distance` e `competition_time_month` e Min-Max Scaler para `year` e `promo_month_time_week`;</li>
-								<li><b>de transformação - enconding:</b> para variável `state_holiday`, foi utilizado One Hot Enconding; para a variável `store_type`, a Label Enconding; e para a variável `assortment`, a Ordinal Enconding;</li>
-								<li><b>de transformação - grandeza:</b> na variável resposta `sales` foi usado o log1p, visando uma distribuição mais próxima do normal;</li>
-								<li><b>de transformação - natureza:</b> nas variáveis temporais, o modelo de natureza cíclica foi utilizado, com o círculo trigonomêtrico (seno e coseno).</li>
-							  </ul>
-
-							  <p>Com o Boruta, foi descoberto quais são as variáveis mais relevantes para usarmos no modelo preditivo de ML.
-							  
-							  <br>
-
-							  <h4>2.2.4. Algoritmos de Machine Learning </h4>
-							   
-							  <p>Foram testados 5 modelos diferentes (Average Model, Linear Regression Model, Lasso Regression Model, Random Forest Regressor e XGBoost Regressor). </p>
-
-							   
-							  <p>Para avaliar o desempenho dos modelos, já que o pedido é uma previsão das próximas 6 semanas, para validar o modelo de ML, as últimas seis semanas de registros de vendas foram reservadas para validação e o restante do dataset, para treino.</p>
+							<h4>3.2.1 Compreensão do Negócio (Business Understanding):</h4>
+							<p>O principal propósito do projeto é tornar mais eficiente e econômico o processo de oferta de seguros automotivos pela Insurance All, reduzindo tanto o tempo quanto os custos envolvidos, além de impulsionar o aumento da receita.</p>
 							
-							  <b><p>Avaliação da performance após o Cross-Validation: </b></p>
-							  <table>
-								<tr>
-								  <th>Model Name</th>
-								  <th>MAE CV</th>
-								  <th>MAPE CV</th>
-								  <th>RMSE</th>
-								</tr>
-								<tr>
-								  <td>Random Forest Regressor</td>
-								  <td>696.66</td>
-								  <td>0.1</td>
-								  <td>1003.81</td>
-								</tr>
-								<tr>
-								  <td>XGBoost Regressor</td>
-								  <td>987.94</td>
-								  <td>0.13</td>
-								  <td>1407.43</td>
-								</tr>
-								<tr>
-								  <td>Linear Regression</td>
-								  <td>1980.04</td>
-								  <td>0.28</td>
-								  <td>2840.0</td>
-								</tr>
-								<tr>
-								  <td>Lasso Regression</td>
-								  <td>2014.53</td>
-								  <td>0.28</td>
-								  <td>2918.82</td>
-								</tr>
-							  </table>
+							<h4>3.2.2 Compreensão dos Dados (Data Understanding):</h4>
+							<ul>
+								<li>Coletar dados no Kaggle;</li>
+								<li>Dividir os dados em conjuntos de treinamento, validação e teste;</li>
+								<li>Avaliar a qualidade dos dados, compreender o significado de cada atributo, renomeá-los, identificar eventuais problemas e proceder com a limpeza dos dados, se necessário;</li>
+								<li>Elaborar um mapa de hipóteses;</li>
+								<li>Efetuar engenharia de atributos (feature engineering), criando os atributos necessários para validar as hipóteses;</li>
+								<li>Explorar os dados para uma compreensão mais profunda dos atributos que influenciam a variável resposta;</li>
+								<li>Gerar insights de negócio;</li>
+							</ul>
+							
+							
+							<h4>3.2.3 Preparação dos Dados (Data Preparation):</h4>
+							<ul>
+								<li>Preparar os dados para a etapa posterior, realizando técnicas como a normalização, reescalonamento e transformação dos dados;</li>
+								<li>Selecionar atributos relevantes para os modelos de machine learning, através da sugestão de algoritmos que listam os melhores atributos. Foi utilizado o Extra Trees, Boruta e LightGBM;</li>
+							</ul>
+							
 
-							  <p>Ainda que o XGBoost não tenha obtido a melhor performance, o algoritmo foi escolhido para realizar a previsão de vendas, pois treina os dados com mais rapidez.</p>
-							  <p><b> O resultado final abaixo, com o ajuste de hiperparâmetros:</b></p>
+							<h4>3.2.4 Modelagem (Modeling):</h4>
+							<ul>
+								<li>Definir os algoritmos a serem aplicados. Os escolhidos foram: KNN, LogisticRegression, XGBoost, Extra Trees e LightGBM;</li>
+								<li>Treinar os modelos usando os dados de treinamento e validação, além do método de validação cruzada;</li>
+								<li>Avaliar o desempenho dos modelos, através da plotagem da curva de ganho limitativo e lift;</li>
+								<li>Avaliar o desempenho dos modelos através das métricas precision at K, recall at K e roc auc score, organizando os valores numa tabela;</li>
+								<li>Ajustar os parâmetros por meio do GridSearchCV e Optuna e determinar qual deles resultou em um desempenho superior para o modelo;</li>
+							</ul>
+							
+							
+							<h4>3.2.5 Avaliação (Evaluation):</h4>
+							<ul>
+								<li>Responder as questões de negócios;</li>
+								<li>Comparar os resultados entre a lista aleatória e a lista ordenada por probabilidade de compra;</li>
+								<li>Traduzir o desempenho do modelo em termos financeiros para a Insurance All;</li>
+							</ul>
+							
 
-							  <table>
-								<tr>
-								  <th>Model Name</th>
-								  <th>MAE</th>
-								  <th>MAPE</th>
-								  <th>RMSE</th>
-								</tr>
-								<tr>
-								  <td>XGBoost Regressor</td>
-								  <td>614.31</td>
-								  <td>0.089</td>
-								  <td>898.91</td>
-								</tr>
-							  </table>
 
-							  <h4>2.2.5. Avaliação do Desempenho do Algoritmo</h4>
-							  
-							  <p>O modelo é analisado sob uma perspectiva de negócios. As imagens abaixo mostram uma comparação de resultados, com o melhor e pior cenário de previsão. </p>
+							<h4>3.2.6 Implantação (Deployment):</h4>
+							<ul>
+								<li>Criar as classes para publicação em produção e testá-las localmente;</li>
+								<li>Implementar o modelo no Render;</li>
+								<li>Utilizar o App Script para integrar o algoritmo de pontuação à planilha do Google Sheets e criar um botão para acessar a solução;</li>
+							</ul>
+							
 
-							  <b><p>Lojas com melhor desempenho - previsões com até 4% de erro</b></p>
-								<img src="https://imgur.com/UHiOq9r.png" width="1200">
-
-							<br>
-							<br>
-							  <b><p>Lojas com pior desempenho - previsões com até 55% de erro</b></p>
-								<img src="https://imgur.com/JDyCY5l.png" width="1200">
-
-							<br>
-							<br>
-
-							  <p>Em vista disso, o total de vendas previstas para as próximas seis semanas se encontra no quadro abaixo:</p>
-
-							  <table>
-								<tr>
-								  <th>Scenario</th>
-								  <th>Revenues (6w)</th>
-								</tr>
-								<tr>
-								  <td>predictions</td>
-								  <td>285,743,680.00</td>
-								</tr>
-								<tr>
-								  <td>worst_scenario</td>
-								  <td>285,054,422.60</td>
-								</tr>
-								<tr>
-								  <td>best_scenario</td>
-								  <td>286,432,960.15</td>
-								</tr>
-							  </table>
-							  
-							  <p><b>Os gráficos abaixo mostram a performance do modelo.</b></p>
-							  <ul>
-							  <li>No gráfico <b>Sales Variance</b>, as vendas reais e estimadas são comparadas;</li>
-							  <li>O gráfico <b>%</b> exibe a taxa de erro nas últimas 6 semanas. Uma taxa acima de 1, as predições estão superestimadas, enquanto menor que 1, estão subestimadas;</li>
-							  <li>O 3º gráfico <b>Error Distribution</b>, distribuição do erro, é usado na análise do resíduo, uma teoria que o erro é analisado. O ideal é ter uma distribuição em forma de sino e com média zero;</li>
-							  <li>O último gráfico <b>Residues</b>, exibe as previsões em relação ao erro. Espera-se que os erros estejam concentrados num tubo (erros com poucas variações).</li>
-							  </ul>
-
-							  <img src="https://imgur.com/bRHSw9P.png" width="1200">
-							  <br>
-							  <br>
-
-							  <h4>2.2.6. Modelo em Produção</h4>
-
-							  <p>Para acesso rápido as previsões de vendas, foi criado um <a href="https://t.me/rssmnn_bot">Bot no Telegram</a>, usando Flask e Render. Como mostra o vídeo abaixo, é so enviar o número da loja que deseja, que uma mensagem será retornada com a previsão de vendas.</p>
-						 
-						<h2>3. Conclusão e Próximos Passos</h2>
+							
+						<h2>4. Modelos de Machine Learning e Performance</h2>
 						
-						<p>Para o primeiro ciclo do CRISP-DM, o modelo apresentou resultados medianos. É necessário que o projeto passe por outros ciclos a fim de melhorar a assertividade das previsões. Nos próximos ciclos podemos:</p>
+						<p>Ao longo do desenvolvimento de projetos, empregamos métricas para avaliar a eficácia do modelo e alcançar a solução desejada. Para este propósito específico, foram selecionadas duas ferramentas visuais: a Curva de Ganho Acumulativo (Cumulative Gains Curve) e a Curva de Elevação (Lift Curve), juntamente com as métricas de precision at k, recall at k e roc auc score.</p>
+
+						<p>Através da <b>Cumulative Gains Curve</b>, é possível observar que o modelo contribui para a redução de custos (evitando alcançar todos os clientes da empresa) e, ao mesmo tempo, busca não incomodar os clientes que não têm interesse em adquirir o seguro. A curva é alcançada a partir das seguintes etapas:</p>
+						<ul>
+							<li>A probabilidade da resposta "sim" (igual a 1), é prevista pelo modelo. Essas observações são organizadas em ordem descrescente, com o objetivo de priorizar as pessoas mais propensas a adquirir o seguro no topo da lista;</li>
+							<li>O conjunto de dados é dividido em decis, ou seja, em 10 grupos. O número de observações positivas (resposta = 1) é calculado em cada decil e o número cumulativo de positivos até o decil atual;</li>
+							<li>O ganho é calculado como a razão entre o número cumulativo de observações positivas até o decil atual e o número total de observações positivas no conjunto de dados. O gráfico da Curva de Ganho Acumulado é plotado com o ganho no eixo vertical e o decil no eixo horizontal.</li>
+						  </ul>						
 						
+						<p>Com a <b>Lift Curve</b>, que é basicamente derivada do gráfico de ganhos, é fornecida uma maneira  fácil de visualizar quantas vezes a lista ordenada do modelo supera a lista aleatória. </p>
+
+						<ul>
+							<li>Sendo o eixo horizontal (x), a porcentagem da amostra e no eixo vertical (y), a razão entre os ganhos do modelo e os ganhos de um modelo aleatório;</li>
+							<li>Logo, Lift Curve é o gráfico entre a elevação no eixo y e o decil correspondente no eixo x. Ao observar o eixo y, torna-se evidente que o modelo performa melhor;</li>
+						  </ul>
+
+						  <p>A <b>precision at k</b>, é útil quando é crucial garantir que as classificações de maior destaque sejam altamente precisas. Envolve o cálculo da proporção de respostas corretas ("sim") até a posição k (top k) da lista.</p>
+
+						  <p>O objetivo do <b>recall at k</b>, reside em garantir que o modelo seja capaz de identificar a maioria das observações positivas, mesmo que isso resulte em algumas observações falsamento positivas. Calcula-se a proporção de respostas corretas até a posição k (top k) da lista em relação ao número total de respostas corretas no conjunto de dados.</p>
+
+						  <p>A métrica <b>ROC-AUC score</b>, calcula a área sob a curva ROC-AUC, a partir das pontuações de previsão. É uma ferramenta útil pois facilita a comparação entre modelos e contribui na escolha do limiar de classificação com base na necessidade específica do problema. Quanto maior o valor, melhor é o poder discriminatório do modelo.</p>
+
+						  <p>Consta a seguir os resultados das análises obtidas, após a validação de cada modelo testado:</p>
+
+						  <table border="1">
+							<tr>
+								<th>Precision_Top_K</th>
+								<th>Recall_Top_K</th>
+								<th>ROC</th>
+								<th>Model Name</th>
+							</tr>
+							<tr>
+								<td>0.28</td>
+								<td>0.930</td>
+								<td>0.854</td>
+								<td>XGBClassifier</td>
+							</tr>
+							<tr>
+								<td>0.28</td>
+								<td>0.932</td>
+								<td>0.856</td>
+								<td>LGBMClassifier</td>
+							</tr>
+							<tr>
+								<td>0.27</td>
+								<td>0.900</td>
+								<td>0.812</td>
+								<td>LogisticRegression</td>
+							</tr>
+							<tr>
+								<td>0.26</td>
+								<td>0.876</td>
+								<td>0.804</td>
+								<td>KNeighborsClassifier</td>
+							</tr>
+							<tr>
+								<td>0.25</td>
+								<td>0.838</td>
+								<td>0.768</td>
+								<td>ExtraTreesClassifier</td>
+							</tr>
+						</table>
+
+						<p>O algoritmo de árvore de decisão, LGBM, foi selecionado para avançar com o projeto. Após a otimização dos hiperparâmetros, o desempenho do modelo será avaliado considerando uma perspectiva de negócios.</p>
+						
+						<h2>5. Resultados de Negócio</h2>
+						
+						<p>As perguntas solicitadas anteriormente pelo gestor serão agora abordadas e respondidas, além das suposições iniciais formuladas na etapa de feature engineering, que após testadas, ajudaram a extrair insights importantes do conjunto de dados.</p>
+
+						<h3>5.1. Quais são os principais insights acerca dos atributos mais significativos de clientes interessados em seguro automóvel?</h3>
+						
+						<p>Com base nos algoritmos de seleção de atributos, os considerados mais importantes são: <b><i>age, region_code, previously_insured, vehicle_age, vehicle_damage, annual_premium e policy_sales_channel.</i></b></p>
+						
+						<p>Ao analisar as hipóteses abaixo, percebe-se que todas elas seguem uma linha de raciocínio contrária ao que foi inicialmente considerado. Portanto, os principais insights são direcionados a clientes que não manifestam interesse pelo seguro. </p>
+
+						
+						
+
+						
+
+						  
+
 						<ul>
 							<li>Adicionar mais variáveis;</li>
 							<li>Criar novas hipóteses e validá-las;</li>
-							<li>Analisar os erros acima de R$ 10.000 e criar modelos específicos para as lojas mais difíceis (MAPE alto).</li>
+							<li>Analisar os erros acima de> R$ 10.000 e criar modelos específicos para as lojas mais difíceis (MAPE alto).</li>
 						</ul>
 					</ul>
 				</section>
