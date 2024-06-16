@@ -275,6 +275,58 @@
 
 					<p>Painel no Power BI com métricas e análises claras e autoexplicativas, facilitando a compreensão dos usuários.</p>
 
+					<body>
+						<html lang="pt">
+						<head>
+							<meta charset="UTF-8">
+							<meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<title>Imagens Ampliáveis</title>
+							<style>
+								.imagem-ampliavel {
+									width: 200px;
+									transition: transform 0.2s;
+								}
+	
+								.imagem-ampliavel:hover {
+									transform: scale(1.2);
+									cursor: pointer; 
+								}
+							</style>
+						</head>
+						<body>
+	
+						<div style="display: flex; justify-content: center;">
+							<img src="https://imgur.com/dDD6u3O.png" alt="Slide 1" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/dDD6u3O.png')" style="margin: 0 15px;">
+							<img src="https://imgur.com/6Ib5iba.png" alt="Slide 2" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/6Ib5iba.png')" style="margin: 0 15px;">
+							<img src="https://imgur.com/jb0fiHt.png" alt="Slide 3" class="imagem-ampliavel" onclick="expandirImagem('https://imgur.com/jb0fiHt.png')" style="margin: 0 15px;">
+						</div>
+	
+						<script>
+							function expandirImagem(src) {
+								var imgExpandida = document.createElement('img');
+								imgExpandida.src = src;
+								imgExpandida.style.width = '100%';
+								imgExpandida.style.height = '100%';
+								imgExpandida.style.position = 'fixed';
+								imgExpandida.style.top = '0';
+								imgExpandida.style.left = '0';
+								imgExpandida.style.zIndex = '9999';
+								imgExpandida.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+								imgExpandida.style.cursor = 'pointer'; // Para permitir fechar clicando na imagem
+	
+								imgExpandida.onclick = function () {
+									document.body.removeChild(imgExpandida);
+								};
+	
+								document.body.appendChild(imgExpandida);
+							}
+						</script>
+	
+						</body>
+						</html>
+						<br>
+
+
 					<h2>5.0. Conclusão</h2>
 					
 					<ul>
